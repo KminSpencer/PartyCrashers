@@ -440,13 +440,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_CantMove: 0
-  m_Speed: 5
+  m_Acceleration: 0.1
+  m_Friction: 0.05
+  m_MaxSpeed: 10
   m_TurnSpeed: 3
   m_Gravity: 100
   m_Jump: 30
   m_MaxMovementX: 14
   m_MaxMovementZ: 18
-  m_JumpButton: Jump_
+  m_JumpButton: Jump_P4
   m_HorizontalButton: JoystickLeftX_P3
   m_VerticalButton: JoystickLeftY_P3
   m_HorizontalRotationButton: JoystickRightY_P3

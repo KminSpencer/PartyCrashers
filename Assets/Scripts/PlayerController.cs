@@ -1,11 +1,16 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 
 
 public class PlayerController : MonoBehaviour
 {
     public bool m_CantMove;
-    public float m_Speed = 5.0f;
+    public float m_Acceleration = 0.1f;
+    public float m_Friction = 0.05f;
+    public float m_SetMaxSpeed = 10.0f;
+    private float m_MaxSpeed = 10.0f;
+    private float m_Speed = 0.0f;
     public float m_TurnSpeed = 5.0f;
     public float m_Gravity = 100f;
     public float m_Jump = 30.0f;
@@ -24,6 +29,7 @@ public class PlayerController : MonoBehaviour
     private float m_CurrentVerticalRotation;
 
     private Vector3 m_MoveDir = Vector3.zero;
+    private Vector3 m_Velocity = Vector3.zero;
 
     private GameObject[] m_Players;
 
@@ -51,7 +57,11 @@ public class PlayerController : MonoBehaviour
             {
                 if( m_StopMovementX == false && m_StopMovementZ == false )
                 {
-                    m_MoveDir = new Vector3( Input.GetAxis( m_HorizontalButton ), 0, Input.GetAxis( m_VerticalButton ) );
+                    if (Input.GetAxis(m_HorizontalButton) > 0.2f || Input.GetAxis(m_VerticalButton) > 0.2f || Input.GetAxis(m_HorizontalButton) < -0.2f || Input.GetAxis(m_VerticalButton) < -0.2f)
+                    {
+                        m_MoveDir = new Vector3(Input.GetAxis(m_HorizontalButton), 0, Input.GetAxis(m_VerticalButton));
+                    }
+                    
                 }
                 //cant move in x direction
                 else if( m_StopMovementX == true && m_StopMovementZ == false )
@@ -69,9 +79,87 @@ public class PlayerController : MonoBehaviour
                     m_MoveDir = new Vector3( 0, 0, 0 );
                 }
                 //moveDir = transform.TransformDirection(moveDir);
-                m_MoveDir *= m_Speed;
-                if( Input.GetButton( m_JumpButton ) )
-                    m_MoveDir.y = m_Jump;
+                //m_MoveDir *= m_Speed;
+                
+                //Horizontal movement
+                if (Input.GetAxis(m_HorizontalButton) > 0.1f || Input.GetAxis(m_HorizontalButton) < -0.1f)
+                {
+                    m_MaxSpeed = m_SetMaxSpeed * Input.GetAxis(m_HorizontalButton);
+                    
+                    if(m_MaxSpeed < 0)
+                    {
+                        m_MaxSpeed *= -1;
+                    }
+                    if (m_Velocity.x < m_MaxSpeed)
+                    {
+                        m_Velocity.x += (m_Acceleration *(m_MaxSpeed/m_SetMaxSpeed))* Input.GetAxis(m_HorizontalButton);
+                    }
+                    if (m_Velocity.x > m_MaxSpeed)
+                    {
+                        m_Velocity.x -= m_Friction;
+                    }
+                    if (m_Velocity.x < -m_MaxSpeed)
+                    {
+                        m_Velocity.x += m_Friction;
+                    }
+
+                }
+                else
+                {
+                    if(m_Velocity.x > 0.0f)
+                    {
+                        m_Velocity.x -= m_Friction;
+                    }
+                    if (m_Velocity.x < 0.0f)
+                    {
+                        m_Velocity.x += m_Friction;
+                    }
+                    if (m_Velocity.x < m_Friction && m_Velocity.x > -m_Friction)
+                    {
+                        m_Velocity.x = 0.0f;
+                    }
+                }
+                //Vertical movement
+                if (Input.GetAxis(m_VerticalButton) > 0.1f || Input.GetAxis(m_VerticalButton) < -0.1f)
+                {
+                    m_MaxSpeed = m_SetMaxSpeed * Input.GetAxis(m_VerticalButton);
+
+                    if (m_MaxSpeed < 0)
+                    {
+                        m_MaxSpeed *= -1;
+                    }
+                    if (m_Velocity.z < m_MaxSpeed)
+                    {
+                        m_Velocity.z += (m_Acceleration * (m_MaxSpeed / m_SetMaxSpeed)) * Input.GetAxis(m_VerticalButton);
+                    }
+                    if (m_Velocity.z > m_MaxSpeed)
+                    {
+                        m_Velocity.z -= m_Friction;
+                    }
+                    if (m_Velocity.z < -m_MaxSpeed)
+                    {
+                        m_Velocity.z += m_Friction;
+                    }
+
+                }
+                else
+                {
+                    if (m_Velocity.z > 0.0f)
+                    {
+                        m_Velocity.z -= m_Friction;
+                    }
+                    if (m_Velocity.z < 0.0f)
+                    {
+                        m_Velocity.z += m_Friction;
+                    }
+                    if (m_Velocity.z < m_Friction && m_Velocity.z > -m_Friction)
+                    {
+                        m_Velocity.z = 0.0f;
+                    }
+                }
+                //Jump
+                if ( Input.GetButton( m_JumpButton ) )
+                    m_Velocity.y = m_Jump;
 
             }
             if( Input.GetAxis( m_HorizontalRotationButton ) != 0 )
@@ -82,8 +170,8 @@ public class PlayerController : MonoBehaviour
             {
                 m_CurrentVerticalRotation = Input.GetAxis( m_VerticalRotationButton );
             }
-            m_MoveDir.y -= m_Gravity * Time.deltaTime;
-            controller.Move( m_MoveDir * Time.deltaTime );
+            m_Velocity.y -= m_Gravity * Time.deltaTime;
+            controller.Move( m_Velocity * Time.deltaTime );
             //transform.rotation = Quaternion.LookRotation(new Vector3(m_CurrentHorizontalRotation, 0, m_CurrentVerticalRotation), Vector3.up);
             float angle = Mathf.Atan2( m_CurrentHorizontalRotation * -1, m_CurrentVerticalRotation * -1 ) * Mathf.Rad2Deg;
             //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, angle, 0), m_TurnSpeed * Time.deltaTime);
