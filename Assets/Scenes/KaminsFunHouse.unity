@@ -126,11 +126,23 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11486216, guid: c0d4599cda93dc54785f1e84c5383933, type: 2}
       propertyPath: m_Friction
-      value: 0.1
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 11486216, guid: c0d4599cda93dc54785f1e84c5383933, type: 2}
       propertyPath: m_Acceleration
-      value: 0.15
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11486216, guid: c0d4599cda93dc54785f1e84c5383933, type: 2}
+      propertyPath: m_Gravity
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 11486216, guid: c0d4599cda93dc54785f1e84c5383933, type: 2}
+      propertyPath: m_AirAcceleration
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11486216, guid: c0d4599cda93dc54785f1e84c5383933, type: 2}
+      propertyPath: m_AirFriction
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c0d4599cda93dc54785f1e84c5383933, type: 2}
@@ -173,6 +185,10 @@ Prefab:
     - target: {fileID: 439830, guid: bae93eb041cdc804a9db3e13f94c95fc, type: 2}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11409526, guid: bae93eb041cdc804a9db3e13f94c95fc, type: 2}
+      propertyPath: rotation.x
+      value: 60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bae93eb041cdc804a9db3e13f94c95fc, type: 2}
